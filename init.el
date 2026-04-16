@@ -1,6 +1,4 @@
 ;;; init.el --- Emacs init file
-;;  Author: Arun Bhattacharya
-;;; Code:
 (defvar file-name-handler-alist-original file-name-handler-alist)
 
 (setq gc-cons-threshold most-positive-fixnum
@@ -11,7 +9,6 @@
 (setq frame-resize-pixelwise t)
 
 (defvar ian/gc-cons-threshold 100000000)
-(defvar ian/indent-width 4)
 
 (add-hook 'emacs-startup-hook ; hook run after loading init files
           (lambda ()
