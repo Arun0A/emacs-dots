@@ -1,6 +1,9 @@
 ;;; init.el --- Emacs init file
 (defvar file-name-handler-alist-original file-name-handler-alist)
 
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
+
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6
       file-name-handler-alist nil

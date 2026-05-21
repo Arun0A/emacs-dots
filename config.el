@@ -89,6 +89,9 @@
   :ensure nil
   :config (setq python-indent-offset ian/indent-width))
 
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
 (use-package mwheel
   :ensure nil
   :config (setq mouse-wheel-scroll-amount '(2 ((shift) . 1))
@@ -177,6 +180,16 @@
   (evil-ex-define-cmd "q" #'kill-this-buffer)
   (evil-ex-define-cmd "wq" #'ian/save-and-kill-this-buffer))
 
+(use-package key-chord
+  :config
+  (key-chord-mode 1)
+  (setq key-chord-two-keys-delay 0.5)
+
+  (with-eval-after-load 'evil
+    (key-chord-define evil-insert-state-map
+                       "jj"
+                       #'evil-normal-state)))
+
 (use-package evil-collection
   :after evil
   :config
@@ -186,6 +199,7 @@
 (use-package evil-commentary
   :after evil
   :diminish
+
   :config (evil-commentary-mode +1))
 
 (use-package magit
