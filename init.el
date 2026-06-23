@@ -4,6 +4,8 @@
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
 
+(setq-default tab-width 4)
+
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6
       file-name-handler-alist nil
@@ -55,8 +57,12 @@
     (setq package-native-compile t)))
 
 ;; Load main config file "./config.org"
-(require 'org)
-(org-babel-load-file (expand-file-name (concat user-emacs-directory "config.org")))
+;; (require 'org)
+;; (org-babel-load-file (expand-file-name (concat user-emacs-directory "config.org")))
+
+;; Load config file "./config.el"
+(load (expand-file-name (concat user-emacs-directory "config.el")))
+
 
 (provide 'init)
 ;;; init.el ends here

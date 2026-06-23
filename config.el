@@ -2,7 +2,7 @@
   :preface
   (defvar ian/indent-width 4) ; change this value to your preferred width
   :config
-  (setq frame-title-format '("Yay-Evil") ; Yayyyyy Evil!
+  (setq frame-title-format '("evilmacs") ; Yayyyyy Evil!
         ring-bell-function 'ignore       ; minimize distraction
         frame-resize-pixelwise t
         default-directory "~/")
@@ -22,6 +22,18 @@
 
   ;; Omit default startup screen
   (setq inhibit-startup-screen t))
+
+;; open recent files
+(recentf-mode 1)
+(setq recentf-max-saved-items 25)
+
+(defun my-choose-recent-file ()
+  (interactive)
+  (let ((file (completing-read "Find recent file: " recentf-list nil t)))
+    (when file
+      (find-file file))))
+
+(global-set-key (kbd "C-x C-r") 'my-choose-recent-file)
 
 ;; The Emacs default split doesn't seem too intuitive for most users.
 (use-package emacs
@@ -150,8 +162,8 @@
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'logo
-        dashboard-banner-logo-title "Yay Evil!"
+  (setq dashboard-startup-banner 'logo-braille
+        dashboard-banner-logo-title "EvilMacs"
         dashboard-items nil
         dashboard-set-footer nil))
 
@@ -294,3 +306,11 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+;; Enable Eglot for LSP integration
+(use-package eglot
+  :ensure t
+  :hook (c-mode . eglot-ensure)
+  :config
+  ;; Automatically use company-mode in Eglot buffers
+  (add-hook 'eglot-managed-mode-hook #'company-mode))
