@@ -50,8 +50,31 @@
     (split-window-right)
     (other-window 1))
   :config
-  (global-set-key (kbd "C-x 2") #'ian/split-and-follow-horizontally)
-  (global-set-key (kbd "C-x 3") #'ian/split-and-follow-vertically))
+  (global-set-key (kbd "C-c \"") #'ian/split-and-follow-horizontally)
+  (global-set-key (kbd "C-c %") #'ian/split-and-follow-vertically)
+  (global-set-key (kbd "C-c x") #'delete-window)
+  (global-set-key (kbd "C-c X") #'delete-other-windows)
+
+  (global-set-key (kbd "C-M-j") #'windmove-down)
+  (global-set-key (kbd "C-M-k") #'windmove-up)
+  (global-set-key (kbd "C-M-h") #'windmove-left)
+  (global-set-key (kbd "C-M-l") #'windmove-right)
+
+  (global-set-key (kbd "C-c b") #'tab-bar-mode)
+  (global-set-key (kbd "C-c c") #'tab-bar-new-tab)
+  (global-set-key (kbd "C-c n") #'tab-bar-switch-to-next-tab)
+  (global-set-key (kbd "C-c p") #'tab-bar-switch-to-prev-tab)
+  (global-set-key (kbd "C-c l") #'tab-bar-switch-to-recent-tab)
+  (global-set-key (kbd "C-c C-x") #'tab-bar-close-tab)
+  (global-set-key (kbd "M-1") (lambda () (interactive) (tab-bar-select-tab 1)))
+  (global-set-key (kbd "M-2") (lambda () (interactive) (tab-bar-select-tab 2)))
+  (global-set-key (kbd "M-3") (lambda () (interactive) (tab-bar-select-tab 3)))
+  (global-set-key (kbd "M-4") (lambda () (interactive) (tab-bar-select-tab 4)))
+  (global-set-key (kbd "M-5") (lambda () (interactive) (tab-bar-select-tab 5)))
+  (global-set-key (kbd "M-6") (lambda () (interactive) (tab-bar-select-tab 6)))
+  (global-set-key (kbd "M-7") (lambda () (interactive) (tab-bar-select-tab 7)))
+  (global-set-key (kbd "M-8") (lambda () (interactive) (tab-bar-select-tab 8)))
+  (global-set-key (kbd "M-9") (lambda () (interactive) (tab-bar-select-tab 9))))
 
 (use-package delsel
   :ensure nil
