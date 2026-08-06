@@ -5,6 +5,7 @@
 (global-display-line-numbers-mode 1)
 
 (setq-default tab-width 4)
+(setq-default c-basic-offset 4)
 
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6

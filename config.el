@@ -167,12 +167,57 @@
 
 (use-package dired
   :ensure nil
+  :after evil
+  :commands (dired dired-jump)
   :config
-  (setq delete-by-moving-to-trash t)
-  (eval-after-load "dired"
-    #'(lambda ()
-        (put 'dired-find-alternate-file 'disabled nil)
-        (define-key dired-mode-map (kbd "RET") #'dired-find-alternate-file))))
+  ;; Move deleted files to trash
+  (setq delete-by-moving-to-trash t
+        trash-directory "~/.local/share/Trash/files/")
+
+  ;; Dired listing
+  (setq dired-listing-switches
+        "-ahl -v --group-directories-first --color=tty")
+
+  ;; Reuse the current Dired buffer
+  (put 'dired-find-alternate-file 'disabled nil)
+
+  ;; RET reuses the current buffer
+  (define-key dired-mode-map (kbd "RET") #'dired-find-alternate-file)
+
+  ;; Evil bindings
+  (evil-define-key 'normal dired-mode-map
+    "h" #'dired-up-directory
+    "l" #'dired-find-file
+
+    ;; Peep
+    "p" #'peep-dired
+
+    ;; Marking
+    "m" #'dired-mark
+    "u" #'dired-unmark
+    "t" #'dired-toggle-marks
+
+    ;; File operations
+    "C" #'dired-do-copy
+    "R" #'dired-do-rename
+    "D" #'dired-do-delete
+    "Y" #'dired-copy-filename-as-kill
+
+    ;; Directories
+    "+" #'dired-create-directory
+
+    ;; Misc
+    "o" #'dired-display-file
+    "J" #'dired-goto-file))
+
+(use-package peep-dired
+  :after (dired evil)
+  :config
+  ;; Evil bindings while peep mode is active
+  (evil-define-key 'normal peep-dired-mode-map
+    "j" #'peep-dired-next-file
+    "k" #'peep-dired-prev-file
+    "q" #'peep-dired))
 
 (use-package cus-edit
   :ensure nil
@@ -337,3 +382,13 @@
   :config
   ;; Automatically use company-mode in Eglot buffers
   (add-hook 'eglot-managed-mode-hook #'company-mode))
+
+(use-package emms-setup
+  :ensure nil
+  :init
+  (add-hook 'emms-player-started-hook 'emms-show)
+  :config
+  (setq emms-show-format "Playing: %s")
+  (emms-all)
+  (emms-default-players)
+  (setq emms-source-file-default-directory "~/Music/"))
