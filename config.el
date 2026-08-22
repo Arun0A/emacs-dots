@@ -195,10 +195,10 @@
   ;; Evil bindings
   (evil-define-key 'normal dired-mode-map
     "h" #'dired-up-directory
-    "l" #'dired-find-file
+    "l" #'dired-open-file
 
-    ;; Peep
-    "p" #'peep-dired
+    ;; Preview
+    "p" #'dired-preview-mode
 
     ;; Marking
     "m" #'dired-mark
@@ -218,14 +218,27 @@
     "o" #'dired-display-file
     "J" #'dired-goto-file))
 
-(use-package peep-dired
-  :after (dired evil)
+(use-package dired-open
+  :ensure t
+  :after dired
   :config
-  ;; Evil bindings while peep mode is active
-  (evil-define-key 'normal peep-dired-mode-map
-    "j" #'peep-dired-next-file
-    "k" #'peep-dired-prev-file
-    "q" #'peep-dired))
+  (setq dired-open-extensions '(("gif" . "qimgv")
+                                ("jpg" . "qimgv")
+                                ("jpeg" . "qimgv")
+                                ("png" . "qimgv")
+                                ("webp" . "qimgv")
+                                ("mkv" . "mpv")
+                                ("mp4" . "mpv")
+                                ("pdf" . "sioyek"))))
+
+(use-package dired-preview
+  :ensure t
+  :after dired
+  :config
+  ;; Debounce/Delay to prevent scroll lag (in seconds)
+  (setq dired-preview-delay 0.5
+        dired-preview-max-size (* 25 1024 1024)   ; 25MB max size to allow photo previews
+        dired-preview-trigger-on-start nil))
 
 (use-package cus-edit
   :ensure nil
