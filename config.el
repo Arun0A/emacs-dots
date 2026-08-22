@@ -1,3 +1,6 @@
+;;; package --- Arun Bhattacharya <arunbth@pm.me> Emacs config
+;;; Commentary:
+;;; Code:
 (use-package emacs
   :preface
   (defvar ian/indent-width 4) ; change this value to your preferred width
@@ -138,18 +141,20 @@
   :config (show-paren-mode +1))
 
 (use-package frame
-  :preface
-  (defun ian/set-default-font ()
-    (interactive)
-    (when (member "Consolas" (font-family-list))
-      (set-face-attribute 'default nil :family "Consolas"))
-    (set-face-attribute 'default nil
-                        :height 120
-                        :weight 'normal))
   :ensure nil
   :config
   (setq initial-frame-alist '((fullscreen . maximized)))
-  (ian/set-default-font))
+
+  (when (member "Iosevka" (font-family-list))
+    (set-face-attribute 'default nil :family "Iosevka"))
+
+  (set-face-attribute 'default nil
+                      :height 150
+                      :weight 'medium)
+
+  (load-theme 'modus-vivendi t)
+  (set-face-attribute 'mode-line nil :height 120)
+  (set-face-attribute 'mode-line-inactive nil :height 120))
 
 (use-package ediff
   :ensure nil
@@ -170,6 +175,9 @@
   :after evil
   :commands (dired dired-jump)
   :config
+
+  (setq dired-kill-when-opening-new-dired-buffer t)
+
   ;; Move deleted files to trash
   (setq delete-by-moving-to-trash t
         trash-directory "~/.local/share/Trash/files/")
@@ -224,16 +232,50 @@
   :config
   (setq custom-file (concat user-emacs-directory "to-be-dumped.el")))
 
-(add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes/"))
-(load-theme 'wilmersdorf t) ; an orginal theme created by me.
+;; (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes/"))
+;; (load-theme 'wilmersdorf t) ; an orginal theme created by me.
 
 (use-package dashboard
+  :init
+  (setq dashboard-startup-banner (expand-file-name "banner.txt" user-emacs-directory)
+        dashboard-center-content t
+        dashboard-vertically-center-content t
+        dashboard-show-shortcuts t
+        dashboard-items '((recents  . 5)
+                          (projects . 5))
+        dashboard-set-navigator t
+        dashboard-set-file-icons nil
+        dashboard-set-heading-icons nil
+        dashboard-set-footer nil
+        dashboard-startupify-list '(dashboard-insert-banner
+                                    dashboard-insert-navigator
+                                    dashboard-insert-items))
   :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'logo-braille
-        dashboard-banner-logo-title "EvilMacs"
-        dashboard-items nil
-        dashboard-set-footer nil))
+
+  (defun my/dashboard-remove-padding (orig-fun &rest args)
+    (let ((res (apply orig-fun args)))
+      (save-excursion
+        (goto-char (point-max))
+        (while (and (not (bobp)) (looking-back "\n" nil))
+          (delete-char -1)))
+      res))
+
+  (advice-add 'dashboard-insert-banner :around #'my/dashboard-remove-padding)
+  (advice-add 'dashboard-insert-navigator :around #'my/dashboard-remove-padding)
+
+  ;; vertical centering logic (unchanged)
+  (defun dashboard-vertically-center ()
+    "Center vertically the content of dashboard."
+    (when dashboard-vertically-center-content
+      (let* ((content-lines (line-number-at-pos (point-max)))
+             (window-lines (window-height))
+             (vertical-lines (floor (/ (- window-lines content-lines) 2))))
+        (when (> vertical-lines 0)
+          (goto-char (point-min))
+          (insert (make-string vertical-lines ?\n))))
+      (goto-char (point-min))))
+
+  (dashboard-setup-startup-hook))
 
 (use-package highlight-numbers
   :hook (prog-mode . highlight-numbers-mode))
@@ -392,3 +434,24 @@
   (emms-all)
   (emms-default-players)
   (setq emms-source-file-default-directory "~/Music/"))
+
+(use-package vterm
+  :ensure t
+  :init
+  (setq vterm-always-compile-module t)
+  :hook (vterm-mode . (lambda () (display-line-numbers-mode -1)))
+  :config
+  (setq vterm-kill-buffer-on-exit t
+        vterm-max-scrollback 10000)
+
+  (defun ian/open-terminal (&optional arg)
+    "Open vterm running tmux.
+With prefix ARG, create a new terminal buffer."
+    (interactive "P")
+    (let ((vterm-shell "tmux"))
+      (if (and (get-buffer "*vterm*") (not arg))
+          (switch-to-buffer "*vterm*")
+        (vterm (and arg (generate-new-buffer-name "*vterm*"))))))
+
+  (global-set-key (kbd "C-c RET") #'ian/open-terminal)
+  (global-set-key (kbd "C-c <return>") #'ian/open-terminal))
