@@ -65,7 +65,7 @@
 
   (global-set-key (kbd "C-c b") #'tab-bar-mode)
   (global-set-key (kbd "C-c c") #'tab-bar-new-tab)
-  (global-set-key (kbd "C-c n") #'tab-bar-switch-to-next-tab)
+  (global-set-key (kbd "C-c o") #'tab-bar-switch-to-next-tab)
   (global-set-key (kbd "C-c p") #'tab-bar-switch-to-prev-tab)
   (global-set-key (kbd "C-c l") #'tab-bar-switch-to-recent-tab)
   (global-set-key (kbd "C-c C-x") #'tab-bar-close-tab)
@@ -90,6 +90,19 @@
 (use-package simple
   :ensure nil
   :config (column-number-mode +1))
+
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory "~/roamNotes")
+  (org-roam-complete-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i" . completion-at-point-functions))
+  :config
+  (org-roam-db-autosync-mode))
 
 (use-package files
   :ensure nil
@@ -392,6 +405,13 @@
 (use-package org
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (shell . t)
+   (C . t)))
 
 (use-package org-bullets :hook (org-mode . org-bullets-mode))
 

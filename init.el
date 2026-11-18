@@ -3,6 +3,11 @@
 
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
+(setq-default display-line-numbers-width-start t)
+(setq-default display-line-numbers-grow-only t)
+
+(setq display-time-format "%d-%m-%Y %H:%M")
+; (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 
 (setq-default tab-width 4)
 (setq-default c-basic-offset 4)
